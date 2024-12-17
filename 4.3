@@ -1,0 +1,74 @@
+#include <iostream>
+#include <fstream>
+#include <map>
+#include <vector>
+#include <algorithm>
+using namespace std;
+
+struct maxy {
+    int suma;
+    vector<int> szerokosci;
+    int h;
+};
+
+int main() {
+    int x, y;
+    ifstream odczyt("prostokaty.txt");
+    map<int, vector<int>> mapa;
+
+    maxy max2 = { 0, {}, 0 };
+    maxy max3 = { 0, {}, 0 };
+    maxy max5 = { 0, {}, 0 };
+
+    while (odczyt >> x >> y) {
+        mapa[x].push_back(y);
+    }
+
+    for (auto it = mapa.rbegin(); it != mapa.rend(); ++it) {
+        sort(it->second.begin(), it->second.end(), greater<int>());
+        int rozmiar = it->second.size();
+        int h_pom = it->first;
+
+        if (rozmiar >= 2) {
+            int suma_pom = it->second[0] + it->second[1];
+            if (suma_pom > max2.suma) {
+                max2 = { suma_pom, {it->second[0], it->second[1]}, h_pom };
+            }
+        }
+
+        if (rozmiar >= 3) {
+            int suma_pom = it->second[0] + it->second[1] + it->second[2];
+            if (suma_pom > max3.suma) {
+                max3 = { suma_pom, {it->second[0], it->second[1], it->second[2]}, h_pom };
+            }
+        }
+ 
+        if (rozmiar >= 5) {
+            int suma_pom = it->second[0] + it->second[1] + it->second[2] + it->second[3]+it->second[4];
+            if (suma_pom > max5.suma) {
+                max5 = { suma_pom, {it->second[0], it->second[1], it->second[2], it->second[3],it->second[4]}, h_pom};
+            }
+        }
+    }
+    cout << "2: " << max2.suma << " z szerokosciami: ";
+    for (int val : max2.szerokosci) {
+        cout << val << " ";
+    }
+    cout << " wysokosc: " << max2.h << endl;
+
+    cout << "3: " << max3.suma << " z szerokosciami: ";
+    for (int val : max3.szerokosci) {
+        cout << val << " ";
+    }
+    cout << " wysokosc: " << max3.h << endl;
+
+    cout << "5: " << max5.suma << " z szerokosciami: ";
+    for (int val : max5.szerokosci) {
+        cout << val << " ";
+    }
+    cout << " wysokosc: " << max5.h << endl;
+
+   
+
+    return 0;
+}
